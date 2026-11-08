@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Visor territorial de la Comisión para la Prevención, Atención y Resolución Oportuna de Conflictos Territoriales de la Zona de Reserva Campesina Cuenca del Río Pato y Valle de Balsillas y del Resguardo Altamira." />
+  <meta name="theme-color" content="#12354d" />
+  <title>Comisión de Conflictos Territoriales | Río Pato, Balsillas y Altamira</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="./css/estilos.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css" />
+</head>
+<body class="welcome-open">
+  <!-- Portada inicial de la Comisión: al pulsar Entrar se muestra el mapa. -->
+  <section id="welcome-screen" class="welcome-screen" role="dialog" aria-modal="true" aria-labelledby="welcome-title" aria-describedby="welcome-subtitle">
+    <div class="welcome-inner">
+      <div class="welcome-logos">
+        <img src="./assets/logos_participantes.png" alt="Logotipos de ACSOGP, ASABP, MCOP y Resguardo Nasa Altamira" width="660" height="165" />
+      </div>
+      <span class="welcome-overline">COMISIÓN TERRITORIAL</span>
+      <h1 id="welcome-title">Comisión para la Prevención, Atención y Resolución Oportuna de Conflictos Territoriales</h1>
+      <div class="welcome-divider" aria-hidden="true"></div>
+      <p id="welcome-subtitle">Zona de Reserva Campesina Cuenca del Río Pato y Valle de Balsillas y Resguardo Altamira</p>
+      <button id="enter-visor" type="button" class="welcome-enter">Entrar al visor <span aria-hidden="true">→</span></button>
+      <p class="welcome-caption">Cartografía para el diálogo y la comprensión territorial</p>
+    </div>
+  </section>
+  <header class="site-header">
+    <a href="./" class="branding" aria-label="Inicio del visor de la Comisión">
+      <span class="brand-icon" aria-hidden="true">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><path d="M4 11c6-7 12-7 18 0 5 5 7 4 10 0" stroke="#ffe0ac" stroke-width="2.4" stroke-linecap="round"/><path d="M4 20c6-7 12-7 18 0 5 5 7 4 10 0" stroke="#85d5df" stroke-width="2.4" stroke-linecap="round"/><path d="M4 29c6-7 12-7 18 0 5 5 7 4 10 0" stroke="#d8f1f2" stroke-width="2.4" stroke-linecap="round"/></svg>
+      </span>
+      <span class="brand-text"><small>COMISIÓN PARA LA PREVENCIÓN, ATENCIÓN Y RESOLUCIÓN OPORTUNA DE CONFLICTOS TERRITORIALES</small><strong>Zona de Reserva Campesina Cuenca del Río Pato y Valle de Balsillas y Resguardo Altamira</strong></span>
+    </a>
+    <div class="header-side"><span class="header-sub">Caquetá · Huila · Colombia</span><span class="mode-pill"><span class="status-light"></span>VISOR WEB</span></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Panel lateral del visor">
+      <section class="sidebar-intro">
+        <span class="overline">VISOR DE CAPAS GEOGRÁFICAS <span class="line"></span></span>
+        <h1>Prevención y diálogo<br/><em>territorial.</em></h1>
+        <p>Este visor apoya la comprensión territorial de la Zona de Reserva Campesina Cuenca del Río Pato y Valle de Balsillas y de la comunidad indígena del Resguardo Altamira, facilitando la prevención, atención y resolución oportuna de conflictos territoriales.</p>
+        <div class="hero-metric"><span class="metric-circle"><svg viewBox="0 0 22 22" width="22" height="22" aria-hidden="true"><path d="M4 17 8 6l4 8 3-6 3 9H4Z" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linejoin="round"/></svg></span><div><small>ÁREA REGISTRADA EN LA FUENTE</small><strong>145.397,13 <span>ha</span></strong></div></div>
+      </section>
+      <section class="sidebar-block">
+        <div class="block-head"><h2>Explorar el mapa</h2><button id="btn-home" class="text-button" type="button">Vista inicial</button></div>
+        <label for="basemap">Mapa base</label>
+        <select id="basemap"><option value="satellite">Imagen satelital · Esri World Imagery</option><option value="openfreemap">Mapa libre · OpenFreeMap (sin clave)</option><option value="none">Sin mapa base</option></select>
+        <label for="search-input">Buscar vereda</label>
+        <div class="search-bar"><input id="search-input" type="search" placeholder="Nombre de la vereda..." autocomplete="off"/><button id="search-button" type="button" title="Buscar vereda" aria-label="Buscar vereda"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.7" cy="10.7" r="6.7"/><path d="m16 16 5 5"/></svg></button></div>
+        <div id="search-results" class="search-results" hidden aria-live="polite"></div>
+      </section>
+      <section class="sidebar-block layers-block" aria-labelledby="heading-layers">
+        <div class="block-head"><h2 id="heading-layers">Capas cartográficas</h2><button id="btn-clear" type="button" class="text-button">Restablecer</button></div>
+        <p class="section-description">Activa las capas que quieras comparar. Haz clic en una geometría para consultar sus atributos.</p>
+        <details class="layer-group" open><summary><span class="group-icon main-icon">01</span><span>Delimitación y ajustes</span><span class="group-count">4</span></summary><div class="layer-items" id="group-main"></div></details>
+        <details class="layer-group" open><summary><span class="group-icon eco-icon">02</span><span>Ambiente y protección</span><span class="group-count">3</span></summary><div class="layer-items" id="group-eco"></div></details>
+        <details class="layer-group" open><summary><span class="group-icon com-icon">03</span><span>Territorios y comunidades</span><span class="group-count">1</span></summary><div class="layer-items" id="group-com"></div></details>
+        <details class="layer-group"><summary><span class="group-icon geo-icon">04</span><span>Referencia geográfica</span><span class="group-count">4</span></summary><div class="layer-items" id="group-geo"></div></details>
+        <label class="extra-switch" for="toggle-labels"><input type="checkbox" id="toggle-labels"/><span>Mostrar nombres de veredas (zoom 12+)</span></label>
+        <div class="layers-remark">Los datos cartográficos se cargan desde archivos incluidos en el proyecto. No se consultan servicios privados de ArcGIS Online.</div>
+      </section>
+      <section class="sidebar-block info-block">
+        <div class="block-head"><h2>Consulta de elementos</h2><span id="selection-status" class="mini-indicator">Sin selección</span></div>
+        <div id="detail" class="empty-detail">Selecciona un polígono o una línea en el mapa para consultar su información.</div>
+      </section>
+      <footer class="side-footer">Fuente: respaldos ArcGIS Online del proyecto.<br/>Geometrías simplificadas para visualización web.<br/>Revisar autorizaciones antes de publicar datos.</footer>
+    </aside>
+    <main class="map-section">
+      <div class="map-heading"><div><div class="overline map-overline"><span class="pin-dot"></span> CAQUETÁ · HUILA · COLOMBIA</div><h2>Visor territorial de la Comisión</h2></div><div class="map-tools"><span id="visible-count" class="layers-live">3 capas activas</span><button type="button" id="btn-fit" class="outline-button"> <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H4v4M16 3h4v4M8 21H4v-4m12 4h4v-4"/></svg> Ajustar a ZRC</button></div></div>
+      <div class="map-card">
+        <div id="map" class="map" role="application" aria-label="Mapa cartográfico interactivo de la Zona de Reserva Campesina Cuenca del Río Pato y Valle de Balsillas y el Resguardo Altamira"></div>
+        <div class="map-overlay" aria-hidden="true"><span class="map-overlay-dot"></span><span>Capas territoriales · consulta interactiva</span></div>
+        <div class="legend" id="legend" aria-label="Leyenda cartográfica"></div>
+        <div class="map-error" id="map-error" hidden role="alert"></div>
+      </div>
+      <div class="map-foot"><div><span class="foot-star">✳</span> Alterna capas para analizar su distribución y relación espacial. Las áreas reportadas corresponden a sus respectivas fuentes.</div><div id="coords">Coordenadas: —</div></div>
+    </main>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.4/dist/leaflet-maplibre-gl.js"></script>
+  <script src="./data/capas.js"></script>
+  <script src="./js/visor.js"></script>
+</body>
+</html>
